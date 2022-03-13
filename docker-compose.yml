@@ -1,0 +1,45 @@
+version: '3'
+x-mlops-common:
+  &mlops-common
+  image: udacity/mlops_tests_3
+  user: root
+  mem_limit: 6G
+  mem_reservation: 256M
+  cpus: 2
+  container_name: mlops_tests
+  environment:
+    &mlops-common-env
+    TZ: "America/Sao_Paulo"
+  ports:
+    - "8080:8080"
+    - "8888:8888"
+    - "5000:5000"
+  volumes:
+    - ~/.aws/:/root/.aws
+    - ../mlops-dynamic-risk-assesment/:/root/project
+    - ~/.gitconfig:/root/.gitconfig
+    - ./scripts/.vimrc:/root/.vimrc
+
+services:
+
+  mlops:
+    <<: *mlops-common
+    environment:
+      <<: *mlops-common-env
+      CONNECTION_CHECK_MAX_COUNT: "0"
+
+  lint-and-test:
+    <<: *mlops-common
+    profiles:
+      - debug
+    environment:
+      <<: *mlops-common-env
+      CONNECTION_CHECK_MAX_COUNT: "0"
+    command: >
+      bash -c """
+      source activate mlops_project
+      && cd /root/project
+      && flake8 starter/ --count --select=E9,F63,F7,F82 --show-source --statistics
+      && flake8 starter/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      && pytest starter/ -vv
+      """
