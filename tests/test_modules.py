@@ -20,7 +20,7 @@ from src import (
 
 @pytest.fixture
 def output_path() -> pathlib.Path:
-    return pathlib.Path.cwd() / 'src' / 'output'
+    return pathlib.Path.cwd() / 'src'
 
 
 def test_ingestion(output_path: pathlib.Path):
@@ -28,4 +28,4 @@ def test_ingestion(output_path: pathlib.Path):
 
     for s_file in ['finaldata.csv', 'ingestedfiles.txt']:
         s_err = f'!!no file {s_file} located'
-        assert (output_path / s_file).is_file(), s_err
+        assert (output_path / 'ingesteddata' / s_file).is_file(), s_err
