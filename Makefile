@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 DEFAULT_GOAL := help
-FILE_LINT := ingestion
+FILE_NAME := ingestion
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -14,9 +14,22 @@ bash:  ## Open an interactive terminal in Docker container
 	-f docker-compose.yml \
 	run --rm mlops
 
-lint-with-pylint:  ## Lint library files. Can pass FILE_LINT name to lint.
+lint-with-pylint:  ## Lint library files. Can pass FILE_NAME name to lint.
 	docker-compose \
 	-p mlops \
 	-f docker-compose.yml \
 	run --rm -w /opt mlops \
-	bash /root/project/scripts/linter-code.sh /root/project/src/$(FILE_LINT).py
+	bash /root/project/scripts/linter-code.sh /root/project/src/$(FILE_NAME).py
+
+lint-and-test:  ## Lint library files. Can pass FILE_NAME name to lint.
+	docker-compose \
+	-p mlops \
+	-f docker-compose.yml \
+	run --rm -w /root/project mlops \
+	bash /root/project/scripts/linter-and-test.sh /root/project $(FILE_NAME)
+
+test-modules:  ## Test modules implemented
+	docker-compose \
+	-p tests \
+	-f docker-compose.yml \
+	run --rm tests

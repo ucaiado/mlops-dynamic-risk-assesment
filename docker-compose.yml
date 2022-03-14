@@ -43,3 +43,17 @@ services:
       && flake8 starter/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       && pytest starter/ -vv
       """
+
+  tests:
+    <<: *mlops-common
+    profiles:
+      - debug
+    environment:
+      <<: *mlops-common-env
+      CONNECTION_CHECK_MAX_COUNT: "0"
+    command: >
+      bash -c """
+      source activate mlops_project
+      && cd /root/project
+      && pytest -vv
+      """

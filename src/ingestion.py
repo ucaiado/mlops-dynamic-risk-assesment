@@ -2,24 +2,23 @@ import pandas as pd
 import numpy as np
 import os
 import json
+import pathlib
 from datetime import datetime
 
 
-
-
-#############Load config.json and get input and output paths
-with open('config.json','r') as f:
-    config = json.load(f) 
+# Load config.json and get input and output paths
+path_to_conf = pathlib.Path.cwd()
+with open(path_to_conf / 'src' / 'config.json', 'r') as f:
+    config = json.load(f)
 
 input_folder_path = config['input_folder_path']
 output_folder_path = config['output_folder_path']
 
 
-
-#############Function for data ingestion
+# Function for data ingestion
 def merge_multiple_dataframe():
-    #check for datasets, compile them together, and write to an output file
-
+    # check for datasets, compile them together, and write to an output file
+    pass
 
 
 if __name__ == '__main__':
