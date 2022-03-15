@@ -15,6 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 sys.path.append(str(pathlib.Path.cwd()))
 from src import (
     ingestion,
+    training
     )
 
 
@@ -29,3 +30,11 @@ def test_ingestion(output_path: pathlib.Path):
     for s_file in ['finaldata.csv', 'ingestedfiles.txt']:
         s_err = f'!!no file {s_file} located'
         assert (output_path / 'ingesteddata' / s_file).is_file(), s_err
+
+
+def test_training(output_path: pathlib.Path):
+    training.train_model()
+
+    for s_file in ['trainedmodel.pkl']:
+        s_err = f'!!no file {s_file} located'
+        assert (output_path / 'practicemodels' / s_file).is_file(), s_err

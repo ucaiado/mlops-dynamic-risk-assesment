@@ -33,7 +33,11 @@ def merge_multiple_dataframe(
     Merge data found in input_path and save it to output_path
     '''
     # create the output folder if it does not exist
-    output_folder_path.mkdir(parents=True, exist_ok=True)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # delete old files versions
+    (output_path / 'finaldata.csv').unlink()
+    (output_path / 'ingestedfiles.txt').unlink()
 
     # check for datasets, compile them together, and write to an output file
     df_output = pd.DataFrame()
