@@ -30,7 +30,7 @@ def score_model(
 ) -> None:
     '''
     Score model in output_path using test data from input_path and save the
-    score in the same model folder
+    output in the same model folder
     '''
     # NOTE: take a trained model, load test data, and calculate an F1 score
     # for the model relative to the test data it should write the result to
