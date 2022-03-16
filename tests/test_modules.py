@@ -16,7 +16,8 @@ sys.path.append(str(pathlib.Path.cwd()))
 from src import (
     ingestion,
     training,
-    scoring
+    scoring,
+    deployment
     )
 
 
@@ -47,5 +48,13 @@ def test_scoring(output_path: pathlib.Path):
     for s_file in ['latestscore.txt']:
         s_err = f'!!no file {s_file} located'
         assert (output_path / 'practicemodels' / s_file).is_file(), s_err
+
+
+def test_deployment(output_path: pathlib.Path):
+    deployment.store_model_into_pickle()
+
+    for s_fl in ['latestscore.txt', 'ingestedfiles.txt', 'trainedmodel.pkl']:
+        s_err = f'!!no file {s_fl} located'
+        assert (output_path / 'production_deployment' / s_fl).is_file(), s_err
 
 
