@@ -36,8 +36,8 @@ def merge_multiple_dataframe(
     output_path.mkdir(parents=True, exist_ok=True)
 
     # delete old files versions
-    (output_path / 'finaldata.csv').unlink()
-    (output_path / 'ingestedfiles.txt').unlink()
+    (output_path / 'finaldata.csv').unlink(missing_ok=True)
+    (output_path / 'ingestedfiles.txt').unlink(missing_ok=True)
 
     # check for datasets, compile them together, and write to an output file
     df_output = pd.DataFrame()

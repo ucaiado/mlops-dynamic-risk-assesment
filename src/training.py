@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Implement mode training step
+Implement model training step
 
 Author: ucaiado
 Date: March 2022
@@ -42,7 +42,7 @@ def train_model(
     output_path.mkdir(parents=True, exist_ok=True)
 
     # delete old file version
-    (output_path / 'trainedmodel.pkl').unlink()
+    (output_path / 'trainedmodel.pkl').unlink(missing_ok=True)
 
     # use this logistic regression for training
     regr = LogisticRegression(
