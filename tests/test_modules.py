@@ -17,7 +17,8 @@ from src import (
     ingestion,
     training,
     scoring,
-    deployment
+    deployment,
+    diagnostics
     )
 
 
@@ -56,5 +57,23 @@ def test_deployment(output_path: pathlib.Path):
     for s_fl in ['latestscore.txt', 'ingestedfiles.txt', 'trainedmodel.pkl']:
         s_err = f'!!no file {s_fl} located'
         assert (output_path / 'production_deployment' / s_fl).is_file(), s_err
+
+
+def test_diagnostics(output_path: pathlib.Path):
+    d_tests = {}
+    d_tests['model_predictions'] = diagnostics.model_predictions(
+        pd.read_csv(output_path / 'testdata' / 'testdata.csv'))
+
+    d_tests['dataframe_summary'] = diagnostics.dataframe_summary(
+        pd.read_csv(output_path / 'ingesteddata' / 'finaldata.csv'))
+
+    d_tests['execution_time'] = diagnostics.execution_time()
+
+    d_tests['outdated_packages_list'] = diagnostics.outdated_packages_list()
+
+    for s_test in d_tests:
+        s_err = f'!! diagnostics.{s_test}() failed'
+        b_test1 = not isinstance(d_tests[s_test], type(None))
+        assert b_test1 and len(d_tests[s_test]) > 0, s_err
 
 
