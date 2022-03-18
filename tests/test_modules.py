@@ -61,6 +61,9 @@ def test_deployment(output_path: pathlib.Path):
 
 def test_diagnostics(output_path: pathlib.Path):
     d_tests = {}
+
+    d_tests['count_na'] = diagnostics.count_missing_values()
+
     d_tests['model_predictions'] = diagnostics.model_predictions(
         pd.read_csv(output_path / 'testdata' / 'testdata.csv'))
 

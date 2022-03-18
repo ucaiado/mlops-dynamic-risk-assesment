@@ -70,11 +70,11 @@ def dataframe_summary(df_data: pd.DataFrame):
 
 # Function to get timings
 def execution_time(
-    input_data_path: pathlib.Path = input_deployment_path,
+    input_dpath: pathlib.Path = input_deployment_path,
 ):
     '''calculate timing of training.py and ingestion.py'''
     l_rtn = []
-    path_root = input_data_path.parents[0]
+    path_root = input_dpath.parents[0]
     l_rtn.append(_measure_time(f'python {path_root}/ingestion.py'))
     l_rtn.append(_measure_time(f'python {path_root}/training.py'))
 
@@ -93,6 +93,18 @@ def outdated_packages_list():
     l_out = [dict(zip(l_out[0], row)) for row in l_out[2:]]
 
     assert 'Package' in l_out[0]
+
+    return l_out
+
+
+# Function to check data integrity
+def count_missing_values(
+    input_dpath: pathlib.Path = input_data_path,
+):
+    '''count the number of NA in the data in the path passed'''
+    df_data = pd.read_csv(input_dpath / 'finaldata.csv')
+    df_agg = df_data.isna().sum().divide(df_data.shape[0])
+    l_out = [{x: y} for x, y in df_agg.items()]
 
     return l_out
 
