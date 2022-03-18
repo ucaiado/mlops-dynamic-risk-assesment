@@ -10,12 +10,10 @@ import pathlib
 import subprocess
 from typing import List
 
-import joblib
 import timeit
+import joblib
 
-import scipy.stats as stats
 import pandas as pd
-import numpy as np
 
 # Load config.json and get environment variables
 path_to_conf = pathlib.Path.cwd() / 'src'
@@ -88,7 +86,15 @@ def execution_time(
 # Function to check dependencies
 def outdated_packages_list():
     '''get a list of deprected packages'''
-    return
+    s_cmd = 'pip list --outdated'
+    result = subprocess.run(s_cmd, shell=True, capture_output=True, text=True)
+    s_aux = result.stdout
+    l_out = [row.replace('  ', ' ').split() for row in s_aux.split('\n')]
+    l_out = [dict(zip(l_out[0], row)) for row in l_out[2:]]
+
+    assert 'Package' in l_out[0]
+
+    return l_out
 
 
 if __name__ == '__main__':
