@@ -18,7 +18,8 @@ from src import (
     training,
     scoring,
     deployment,
-    diagnostics
+    diagnostics,
+    reporting
     )
 
 
@@ -78,5 +79,13 @@ def test_diagnostics(output_path: pathlib.Path):
         s_err = f'!! diagnostics.{s_test}() failed'
         b_test1 = not isinstance(d_tests[s_test], type(None))
         assert b_test1 and len(d_tests[s_test]) > 0, s_err
+
+
+def test_reporting(output_path: pathlib.Path):
+    reporting.score_model()
+
+    for s_file in ['confusionmatrix.png']:
+        s_err = f'!!no file {s_file} located'
+        assert (output_path / 'practicemodels' / s_file).is_file(), s_err
 
 
