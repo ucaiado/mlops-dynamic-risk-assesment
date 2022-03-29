@@ -11,6 +11,7 @@ x-mlops-common:
     &mlops-common-env
     TZ: "America/Sao_Paulo"
   ports:
+    - "8000:8000"
     - "8080:8080"
     - "8888:8888"
     - "5000:5000"
@@ -56,4 +57,18 @@ services:
       source activate mlops_project
       && cd /root/project
       && pytest -vv
+      """
+
+  run_api:
+    <<: *mlops-common
+    profiles:
+      - debug
+    environment:
+      <<: *mlops-common-env
+      CONNECTION_CHECK_MAX_COUNT: "0"
+    command: >
+      bash -c """
+      source activate mlops_project
+      && cd /root/project
+      && python src/app.py
       """

@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 DEFAULT_GOAL := help
-FILE_NAME := training
+FILE_NAME := app
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -21,7 +21,7 @@ lint-with-pylint:  ## Lint library files. Can pass FILE_NAME name to lint.
 	run --rm -w /opt mlops \
 	bash /root/project/scripts/linter-code.sh /root/project/src/$(FILE_NAME).py
 
-lint-and-test:  ## Lint library files. Can pass FILE_NAME name to lint.
+lint-and-test:  ## Lint library files and run the test related to the file passed. Can pass FILE_NAME name to lint and test.
 	docker-compose \
 	-p mlops \
 	-f docker-compose.yml \
@@ -33,3 +33,9 @@ test-modules:  ## Test modules implemented
 	-p tests \
 	-f docker-compose.yml \
 	run --rm tests
+
+run-api:  ## Start Flask API app
+	docker-compose \
+	-p run_api \
+	-f docker-compose.yml \
+	run --service-ports  --rm run_api

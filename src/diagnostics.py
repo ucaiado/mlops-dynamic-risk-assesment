@@ -8,7 +8,7 @@ Date: March 2022
 import json
 import pathlib
 import subprocess
-from typing import List
+from typing import List, Union
 
 import timeit
 import joblib
@@ -45,19 +45,23 @@ def _measure_time(s_cmd):
 
 # Function to get model predictions
 def model_predictions(
-    df_data: pd.DataFrame,
+    this_data: Union[pd.DataFrame, str],
     input_mpath: pathlib.Path = input_deployment_path,
 ) -> List[int]:
     '''Read the deployed model and a given dataset, calculate predictions'''
-    df_x = _prepare_data(df_data)
+    if isinstance(this_data, str):
+        this_data = pd.read_csv(this_data)
+    df_x = _prepare_data(this_data)
     model = joblib.load(input_mpath / 'trainedmodel.pkl')
     return list(model.predict(df_x))
 
 
 # Function to get summary statistics
-def dataframe_summary(df_data: pd.DataFrame):
+def dataframe_summary(this_data: Union[pd.DataFrame, str]):
     '''calculate summary statistics'''
-    df_x = _prepare_data(df_data)
+    if isinstance(this_data, str):
+        this_data = pd.read_csv(this_data)
+    df_x = _prepare_data(this_data)
     df_x.agg(['mean', 'median', 'std'])
 
     l_out = []

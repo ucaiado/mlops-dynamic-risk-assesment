@@ -50,3 +50,6 @@ def score_model(
 
     # save the data
     (output_path / 'latestscore.txt').write_text(f'{f_score:4f}')
+
+    # return the score
+    return f_score

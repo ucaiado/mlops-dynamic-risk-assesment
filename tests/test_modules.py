@@ -11,6 +11,8 @@ import pytest
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+from typing import Any
+from flask.testing import FlaskClient
 
 sys.path.append(str(pathlib.Path.cwd()))
 from src import (
@@ -19,13 +21,22 @@ from src import (
     scoring,
     deployment,
     diagnostics,
-    reporting
+    reporting,
+    app as app_src
     )
 
 
 @pytest.fixture
 def output_path() -> pathlib.Path:
     return pathlib.Path.cwd() / 'src'
+
+
+@pytest.fixture()
+def client():
+    app_src.app.config.update({
+        "TESTING": True,
+    })
+    return app_src.app.test_client()
 
 
 def test_ingestion(output_path: pathlib.Path):
@@ -66,10 +77,10 @@ def test_diagnostics(output_path: pathlib.Path):
     d_tests['count_na'] = diagnostics.count_missing_values()
 
     d_tests['model_predictions'] = diagnostics.model_predictions(
-        pd.read_csv(output_path / 'testdata' / 'testdata.csv'))
+        pd.read_csv('testdata/testdata.csv'))
 
     d_tests['dataframe_summary'] = diagnostics.dataframe_summary(
-        pd.read_csv(output_path / 'ingesteddata' / 'finaldata.csv'))
+        pd.read_csv('ingesteddata/finaldata.csv'))
 
     d_tests['execution_time'] = diagnostics.execution_time()
 
@@ -89,3 +100,36 @@ def test_reporting(output_path: pathlib.Path):
         assert (output_path / 'practicemodels' / s_file).is_file(), s_err
 
 
+def test_app(output_path: pathlib.Path, client: FlaskClient):
+
+    # test prediction end-point
+    s_api_file = 'testdata/testdata.csv'
+    response = client.post(f"/prediction?dataset_path={s_api_file}")
+
+    assert response.status_code == 200
+    assert b'predictions' in response.data
+
+    # test prediction end-point
+    s_api_file = 'testdata/testdata.csv'
+    response = client.post(f"/prediction?dataset_path={s_api_file}")
+
+    assert response.status_code == 200
+    assert b'predictions' in response.data
+
+    # test scoring end-point
+    response = client.get(f"/scoring")
+
+    assert response.status_code == 200
+    assert b'score' in response.data
+
+    # test prediction end-point
+    response = client.get(f"/summarystats")
+
+    assert response.status_code == 200
+    assert b'summary' in response.data
+
+    # test prediction end-point
+    response = client.get(f"/diagnostics")
+
+    assert response.status_code == 200
+    assert b'missing_values' in response.data

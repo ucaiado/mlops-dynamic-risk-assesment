@@ -42,7 +42,7 @@ def score_model(
     confusion_matrix = pd.DataFrame(
         metrics.confusion_matrix(
             y_true=df_data['exited'].values,
-            y_pred=np.array(model_predictions(df_data=df_data))),
+            y_pred=np.array(model_predictions(this_data=df_data))),
         index=['False', 'True'],
         columns=['False', 'True']
     )
