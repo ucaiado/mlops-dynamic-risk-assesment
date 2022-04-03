@@ -14,7 +14,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import metrics
 
-from .diagnostics import model_predictions
+try:
+    from .diagnostics import model_predictions
+except:
+    from diagnostics import model_predictions
 
 
 # Load config.json and get path variables

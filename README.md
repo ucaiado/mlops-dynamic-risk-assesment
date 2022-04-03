@@ -5,10 +5,8 @@ Dyamic Risk Assesment System
 This project is part of the [ML DevOps Engineer Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821)
  program, from Udacity. I set up processes and scripts to re-train, re-deploy,
  monitor, and report on an ML model that estimates the attrition risk of each
- client from a company
-
-I deployed the model using the Flask package, and some API tests were also
- implemented.
+ client from a company. I deployed the model using the Flask package, and some
+ API unit tests were also implemented.
 
 
 ### Install
@@ -26,7 +24,13 @@ In a terminal or command window, navigate to the top-level project directory
  following command:
 
 ```bash
-> make ...
+> make run-api
+```
+
+Then, in another terminal, run:
+
+```bash
+> make full-process
 ```
 
 

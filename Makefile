@@ -39,3 +39,6 @@ run-api:  ## Start Flask API app
 	-p run_api \
 	-f docker-compose.yml \
 	run --service-ports  --rm run_api
+
+full-process:  ## Run full process step
+	python src/fullprocess.py

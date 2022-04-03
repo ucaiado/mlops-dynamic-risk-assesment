@@ -22,6 +22,7 @@ from src import (
     deployment,
     diagnostics,
     reporting,
+    fullprocess,
     app as app_src
     )
 
@@ -77,10 +78,10 @@ def test_diagnostics(output_path: pathlib.Path):
     d_tests['count_na'] = diagnostics.count_missing_values()
 
     d_tests['model_predictions'] = diagnostics.model_predictions(
-        pd.read_csv('testdata/testdata.csv'))
+        pd.read_csv(output_path / 'testdata' / 'testdata.csv'))
 
     d_tests['dataframe_summary'] = diagnostics.dataframe_summary(
-        pd.read_csv('ingesteddata/finaldata.csv'))
+        pd.read_csv(output_path / 'ingesteddata' / 'finaldata.csv'))
 
     d_tests['execution_time'] = diagnostics.execution_time()
 
@@ -133,3 +134,8 @@ def test_app(output_path: pathlib.Path, client: FlaskClient):
 
     assert response.status_code == 200
     assert b'missing_values' in response.data
+
+
+# def test_fullprocess(output_path: pathlib.Path):
+#     b_new_data = fullprocess.check_and_read_new_data()
+#     fullprocess.check_for_model_drift(has_new_data=b_new_data)

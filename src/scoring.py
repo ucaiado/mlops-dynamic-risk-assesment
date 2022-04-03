@@ -27,6 +27,7 @@ output_folder_path = path_to_conf / pathlib.Path(config['output_model_path'])
 def score_model(
     input_path: pathlib.Path = input_folder_path,
     output_path: pathlib.Path = output_folder_path,
+    b_save_score: bool = True
 ) -> None:
     '''
     Score model in output_path using test data from input_path and save the
@@ -36,11 +37,11 @@ def score_model(
     # for the model relative to the test data it should write the result to
     # the latestscore.txt file
 
-    # delete old output file version
-    (output_path / 'latestscore.txt').unlink(missing_ok=True)
-
     # load test data and model
-    df_data = pd.read_csv(input_path / 'testdata.csv')
+    if 'csv' not in input_path.name:
+        df_data = pd.read_csv(input_path / 'testdata.csv')
+    else:
+        df_data = pd.read_csv(input_path)
     df_y = df_data.pop('exited')
     df_x = df_data.drop(['corporation'], axis=1)
     model = joblib.load(output_path / 'trainedmodel.pkl')
@@ -48,8 +49,11 @@ def score_model(
     df_pred = model.predict(df_x)
     f_score = metrics.f1_score(df_pred, df_y)
 
-    # save the data
-    (output_path / 'latestscore.txt').write_text(f'{f_score:4f}')
+    if b_save_score:
+        # delete old output file version
+        (output_path / 'latestscore.txt').unlink(missing_ok=True)
+        # save the data
+        (output_path / 'latestscore.txt').write_text(f'{f_score:4f}')
 
     # return the score
     return f_score
